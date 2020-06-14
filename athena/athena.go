@@ -2,6 +2,7 @@ package athena
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -68,9 +69,27 @@ func (c *Connection) call(req *http.Request) (response interface{}, err error) {
 		return nil, err
 	}
 	var decoded interface{}
+	fmt.Println("###### BODY", string(body))
 	err = json.Unmarshal(body, &decoded)
 	if err != nil {
 		return nil, err
 	}
 	return decoded, err
+}
+
+// GET get request
+func (c *Connection) GET(path string, params map[string]string) (response interface{}, err error) {
+	vals := url.Values{}
+	for k, v := range params {
+		vals.Add(k, v)
+	}
+	targetURL := strings.Join([]string{c.basePath, c.version, c.practiceID, path}, "/")
+	fmt.Println(targetURL)
+	req, err := http.NewRequest("GET", targetURL, strings.NewReader(vals.Encode()))
+	req.Header.Add("Authorization", "Bearer "+c.Token)
+	if err != nil {
+		return nil, err
+	}
+	response, err = c.call(req)
+	return response, err
 }
