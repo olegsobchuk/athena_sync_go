@@ -69,7 +69,6 @@ func (c *Connection) call(req *http.Request) (response interface{}, err error) {
 		return nil, err
 	}
 	var decoded interface{}
-	fmt.Println("###### BODY", string(body))
 	err = json.Unmarshal(body, &decoded)
 	if err != nil {
 		return nil, err

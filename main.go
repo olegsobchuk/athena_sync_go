@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/olegsobchuk/athena_sync_go/athena"
+	"github.com/olegsobchuk/athena_sync_go/athena/database"
 )
 
 func main() {
@@ -13,10 +14,16 @@ func main() {
 	if err != nil {
 		log.Fatalln("New, err: ", err)
 	}
-	res, err := apiConn.GET("practiceinfo", map[string]string{})
+	res, err := apiConn.GET("departments", map[string]string{})
 	if err != nil {
 		log.Fatalln("Get, err: ", err)
 	}
-	fmt.Printf("%v\n", res)
-	fmt.Println("It works!")
+	fmt.Printf("%T\n", res)
+	dep := res.(map[string]interface{})["departments"].([]interface{})[0]
+
+	fmt.Println(dep.(map[string]interface{})["departmentid"])
+	fmt.Println("Athena API works!")
+
+	db := database.DB
+	db.Close()
 }
