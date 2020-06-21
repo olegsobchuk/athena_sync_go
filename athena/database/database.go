@@ -49,7 +49,7 @@ func prepareDB() (err error) {
 }
 
 // Insert insert record
-func Insert(payload, toTable, remoteID string) (err error) {
+func Insert(toTable string, payload []byte, remoteID string) (err error) {
 	preparedPayload := payload // payload.to_json.gsub("'", "''")
 	values := fmt.Sprintf("'%s', '%s'::jsonb, NOW(), NOW()", remoteID, preparedPayload)
 	rowSQL := `
@@ -62,6 +62,11 @@ func Insert(payload, toTable, remoteID string) (err error) {
 	`
 	DB.QueryRow(fmt.Sprintf(rowSQL, toTable, values))
 	return nil
+}
+
+// InsertWithPaging insert multiple pages
+func InsertWithPaging() {
+	// Add
 }
 
 func checkErr(err error) {
